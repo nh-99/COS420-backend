@@ -1,5 +1,5 @@
 alembic==0.9.8
-COS420-backend==1.1a15193449
+-e git+https://github.com/stansmall/COS420-backend.git@43b65617b9afe072eae1d4b8b67dbf9e5ae0d002#egg=COS420_backend
 decorator==4.2.1
 falcon==1.0.0
 falcon-auth==1.1.0
@@ -12,10 +12,12 @@ jedi==0.11.1
 Mako==1.0.7
 MarkupSafe==1.0
 parso==0.1.1
+passlib==1.7.1
 pexpect==4.4.0
 pickleshare==0.7.4
 pluggy==0.6.0
 prompt-toolkit==1.0.15
+psycopg2==2.7.4
 ptyprocess==0.5.2
 py==1.5.2
 pyflakes==1.6.0

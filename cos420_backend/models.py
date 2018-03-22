@@ -3,31 +3,42 @@
 from sqlalchemy import Column
 from sqlalchemy import Table, String, Integer, DateTime, ForeignKey, Boolean, Float
 from sqlalchemy_utils import UUIDType
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+
+from passlib.apps import custom_app_context as pwd_context
+
 import uuid, datetime, os
 
 Base = declarative_base()
+DBSession = scoped_session(sessionmaker())
 
 # Stores user related data in the database
 class User(Base):
     __tablename__ = 'users'
+    query = DBSession.query_property()
 
-    id = Column(UUIDType(binary=False), primary_key=True)
+    id = Column(UUIDType(binary=False), primary_key=True, default=uuid.uuid4)
     first_name = Column(String(35))
     last_name = Column(String(35))
     email = Column(String(254), unique=False)
-    password = Column(String(80))
+    password = Column(String(200))
     security_question = Column(String(100))
     security_answer = Column(String(50))
     employee = relationship('Employee')
     time_created = Column(DateTime, default=datetime.datetime.utcnow)
     last_seen = Column(DateTime, default=datetime.datetime.utcnow)
 
+    def hash_password(self, password):
+        self.password = pwd_context.encrypt(password)
+
+    def verify_password(self, password):
+        return pwd_context.verify(password, self.password)
+
     @property
     def serialize(self):
         return {
-            'id': self.id,
+            'id': str(self.id),
             'first_name': self.first_name,
             'last_name': self.last_name,
             'email': self.email
@@ -109,7 +120,7 @@ class PayCycle(Base):
     id = Column(UUIDType(binary=False), primary_key=True)
     employee_id = Column(UUIDType(binary=False), ForeignKey('employee.id'))
     company_id = Column(UUIDType(binary=False), ForeignKey('company.id'))
-    hours = relationship(
+    hours_logged = relationship(
         "Hours",
         backref="pay_cycle",
         secondary=paycycle_hours
@@ -155,6 +166,10 @@ class Hours(Base):
             'total': self.total
         }
 
+from sqlalchemy import create_engine
+engine = create_engine('postgresql+psycopg2://bangor_payroll:payroll@localhost/bangor_payroll')
+DBSession.configure(bind=engine)
+
 
 if __name__ == '__main__':
     db_name = 'bangor_payroll.sqlite'
@@ -162,5 +177,5 @@ if __name__ == '__main__':
         os.remove(db_name)
 
     from sqlalchemy import create_engine
-    engine = create_engine('sqlite:///' + db_name)
+    engine = create_engine('postgresql+psycopg2://bangor_payroll:payroll@localhost/bangor_payroll')
     Base.metadata.create_all(engine, checkfirst=True)
