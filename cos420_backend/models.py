@@ -77,7 +77,7 @@ class Employee(Base):
     id = Column(UUIDType(binary=False), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUIDType(binary=False), ForeignKey('users.id'))
     company_id = Column(UUIDType(binary=False), ForeignKey('company.id'))
-    role = Column(Integer)
+    role = Column(Integer) # Owner: 999
     street_address = Column(String(128))
     city = Column(String(64))
     state = Column(String(64))

@@ -20,6 +20,7 @@ from cos420_backend.models import Hours, Employee
 import cos420_backend.models as models
 import cos420_backend.utils.users as users
 import cos420_backend.utils.cycles as cycles
+import cos420_backend.utils.static as static
 
 
 """
@@ -61,7 +62,12 @@ class ReportHoursResource(object):
         if not employee_id:
             resp.status = falcon.HTTP_403
             resp.body = json.dumps({'error': 'User is not a part of the company'})
-            # TODO: return to finsh the request?
+            return
+        employee = Employee.query.filter_by(id=employee_id).first()
+
+        if not employee.is_active:
+            resp.status = falcon.HTTP_403
+            resp.body = json.dumps({'error': 'You are not an active employee in the company'})
             return
 
         # Get the employee object from the database to assign the current pay cycle to the hours object
@@ -71,7 +77,6 @@ class ReportHoursResource(object):
         if not intervals.DateTimeInterval([start_time, end_time]) in pay_cycle.time_range:
             resp.status = falcon.HTTP_400
             resp.body = json.dumps({'error': 'Hours are not within the current pay cycle'})
-            # TODO: return to finsh the request?
             return
 
         # Check if hours overlap and return an error
@@ -85,7 +90,6 @@ class ReportHoursResource(object):
         if exists:
             resp.status = falcon.HTTP_400
             resp.body = json.dumps({'error': 'These hours are already recorded'})
-            # TODO: return to finsh the request?
             return
 
         # Checks pass, create our object and return a valid response
@@ -94,3 +98,39 @@ class ReportHoursResource(object):
         models.DBSession.add(hours) # Commit hours to database
         models.DBSession.commit()
         resp.body = json.dumps(hours.serialize) # Return serialized version of the hours object
+
+    @staticmethod
+    def on_delete(req, resp):
+        raw_json = req.stream.read().decode('utf-8')
+        data = json.loads(raw_json, encoding='utf-8')
+
+        user_id = req.context['user']['id']
+        company_id = data.get('company_id')
+        hours_id = data.get('hours_id')
+        employee_id = users.user_in_company(user_id, company_id)
+        employee = None
+
+        # Check if the employee was found in the specified company
+        if not employee_id:
+            resp.status = falcon.HTTP_403
+            resp.body = json.dumps({'error': 'User is not a part of the company'})
+            return
+
+        # Check if employee has the admin role
+        employee = Employee.query.filter_by(id=employee_id).first()
+        if employee.role != static.ADMIN_ROLE:
+            resp.status = falcon.HTTP_403
+            resp.body = json.dumps({'error': 'You do not have access to delete these hours'})
+            return
+
+        # All checks pass, so delete the hours object
+        hours = Hours.query.filter_by(id=hours_id).first()
+        if not hours:
+            resp.status = falcon.HTTP_404
+            resp.body = json.dumps({'error': 'Hours with specified ID not found'})
+            return
+
+        models.DBSession.delete(hours)
+        models.DBSession.commit()
+
+        resp.body = json.dumps({'msg': 'Hours deleted successfully.'})
