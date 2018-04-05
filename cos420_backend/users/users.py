@@ -14,7 +14,6 @@ from sqlalchemy.orm import sessionmaker
 # Local imports
 from cos420_backend import settings
 from cos420_backend.models import User
-import cos420_backend.settings.local as settings
 
 # Method to be used for authenticating the user.
 # Returns the serialized user if authentication passes, otherwise returns None

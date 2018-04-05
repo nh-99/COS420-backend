@@ -2,7 +2,7 @@
 
 from sqlalchemy import Column
 from sqlalchemy import Table, String, Integer, DateTime, ForeignKey, Boolean, Float
-from sqlalchemy_utils import UUIDType
+from sqlalchemy_utils import UUIDType, DateTimeRangeType
 from sqlalchemy.orm import relationship, scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -20,6 +20,7 @@ class User(Base):
 
     id = Column(UUIDType(binary=False), primary_key=True, default=uuid.uuid4)
     first_name = Column(String(35))
+    middle_name = Column(String(35))
     last_name = Column(String(35))
     email = Column(String(254), unique=False)
     password = Column(String(200))
@@ -47,13 +48,13 @@ class User(Base):
 
 class Company(Base):
     __tablename__ = 'company'
+    query = DBSession.query_property()
 
-    id = Column(UUIDType(binary=False), primary_key=True)
+    id = Column(UUIDType(binary=False), primary_key=True, default=uuid.uuid4)
     name = Column(String(100))
     street_address = Column(String(128))
     city = Column(String(64))
     state = Column(String(64))
-    default_pay_cycle = relationship('PayCycle')
     employees = relationship('Employee')
 
     time_created = Column(DateTime, default=datetime.datetime.utcnow)
@@ -62,17 +63,18 @@ class Company(Base):
     @property
     def serialize(self):
         return {
-            'id': self.id,
+            'id': str(self.id),
             'name': self.name,
             'address': self.street_address + ', ' + self.city + ' ' + self.state,
-            'pay_cycle': self.default_pay_cycle.serialize
+            'pay_cycle': [p.serialize for p in self.default_pay_cycle]
         }
 
 
 class Employee(Base):
     __tablename__ = 'employee'
+    query = DBSession.query_property()
 
-    id = Column(UUIDType(binary=False), primary_key=True)
+    id = Column(UUIDType(binary=False), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUIDType(binary=False), ForeignKey('users.id'))
     company_id = Column(UUIDType(binary=False), ForeignKey('company.id'))
     role = Column(Integer)
@@ -84,8 +86,8 @@ class Employee(Base):
     rate = Column(Integer)
     overtime = Column(Boolean, default=False)
     overtime_rate = Column(Integer)
+    pay_cycles = relationship('PayCycle')
     is_active = Column(Boolean) # Whether or not the employee is still able to log hours
-    pay_cycle = relationship('PayCycle')
 
     time_created = Column(DateTime, default=datetime.datetime.utcnow)
     last_seen = Column(DateTime, default=datetime.datetime.utcnow)
@@ -93,7 +95,7 @@ class Employee(Base):
     @property
     def serialize(self):
         return {
-            'id': self.id,
+            'id': str(self.id),
             'role': self.role,
             'address': self.street_address + ', ' + self.city + ' ' + self.state,
             'payroll_type': self.payroll_type,
@@ -101,32 +103,20 @@ class Employee(Base):
             'rate': self.rate / 100,
             'overtime': self.overtime,
             'overtime_rate': self.overtime_rate,
-            'active': self.is_active,
-            'pay_cycle': self.pay_cycle.serialize
+            'active': self.is_active
         }
-
-
-paycycle_hours = Table(
-    "paycycle_hours",
-    Base.metadata,
-    Column("fk_pay_cycle", UUIDType, ForeignKey("pay_cycle.id")),
-    Column("fk_hours", UUIDType, ForeignKey("hours.id")),
-)
 
 
 class PayCycle(Base):
     __tablename__ = 'pay_cycle'
+    query = DBSession.query_property()
 
-    id = Column(UUIDType(binary=False), primary_key=True)
+    id = Column(UUIDType(binary=False), primary_key=True, default=uuid.uuid4)
     employee_id = Column(UUIDType(binary=False), ForeignKey('employee.id'))
     company_id = Column(UUIDType(binary=False), ForeignKey('company.id'))
-    hours_logged = relationship(
-        "Hours",
-        backref="pay_cycle",
-        secondary=paycycle_hours
-    )
-    start = Column(DateTime)
-    end = Column(DateTime)
+    hours = relationship('Hours')
+    time_range = Column(DateTimeRangeType)
+    employees = relationship('Employee')
 
     time_created = Column(DateTime, default=datetime.datetime.utcnow)
     last_seen = Column(DateTime, default=datetime.datetime.utcnow)
@@ -136,23 +126,19 @@ class PayCycle(Base):
         return {
             'id': self.id,
             'hours': [h.serialize for h in self.hours],
-            'start': self.start,
-            'end': self.end
+            'time_range': self.time_range
         }
 
 
 class Hours(Base):
     __tablename__ = 'hours'
+    query = DBSession.query_property()
 
-    id = Column(UUIDType(binary=False), primary_key=True)
-    start = Column(DateTime)
-    end = Column(DateTime)
+    id = Column(UUIDType(binary=False), primary_key=True, default=uuid.uuid4)
+    pay_cycle_id = Column(UUIDType(binary=False), ForeignKey('pay_cycle.id'))
+    time_range = Column(DateTimeRangeType)
+    approved = Column(Boolean)
     total_hours = Column(Float)
-    pay_cycles = relationship(
-        "PayCycle",
-        backref="hours",
-        secondary=paycycle_hours
-    )
 
     time_created = Column(DateTime, default=datetime.datetime.utcnow)
     last_seen = Column(DateTime, default=datetime.datetime.utcnow)
@@ -160,10 +146,8 @@ class Hours(Base):
     @property
     def serialize(self):
         return {
-            'id': self.id,
-            'start': self.start,
-            'end': self.end,
-            'total': self.total
+            'id': str(self.id),
+            'total': self.total_hours
         }
 
 from sqlalchemy import create_engine

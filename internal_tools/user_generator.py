@@ -11,7 +11,7 @@ last_name = input('Enter your last name: ')
 email = input('Enter your email address: ')
 password = input('Enter your password: ')
 pass_conf = input('Confirm your password: ')
-print('#'*20)
+print('#'*40)
 security_question = input('Enter a security question: ')
 security_answer = input('Your answer to the question: ')
 
