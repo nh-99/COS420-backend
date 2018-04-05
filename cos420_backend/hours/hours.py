@@ -68,7 +68,7 @@ class ReportHoursResource(object):
         pay_cycle = cycles.get_latest_cycle(employee_id, company_id)
 
         # Check if hours are out of pay cycle and return an error
-        if not pay_cycle.time_range.__and__(intervals.DateTimeInterval([start_time, end_time])):
+        if not intervals.DateTimeInterval([start_time, end_time]) in pay_cycle.time_range:
             resp.status = falcon.HTTP_400
             resp.body = json.dumps({'error': 'Hours are not within the current pay cycle'})
             # TODO: return to finsh the request?
@@ -80,7 +80,7 @@ class ReportHoursResource(object):
         # Scan through all hours in current pay cycle and see if we've already
         # logged time for them
         for hour in hours:
-            if hour.time_range.__and__(intervals.DateTimeInterval([start_time, end_time])):
+            if intervals.DateTimeInterval([start_time, end_time]) in hour.time_range:
                 exists = True
         if exists:
             resp.status = falcon.HTTP_400
