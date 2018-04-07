@@ -147,7 +147,9 @@ class Hours(Base):
     def serialize(self):
         return {
             'id': str(self.id),
-            'total': self.total_hours
+            'total': self.total_hours,
+            'start': self.time_range.lower.isoformat(),
+            'end': self.time_range.upper.isoformat()
         }
 
 from sqlalchemy import create_engine
