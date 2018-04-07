@@ -134,3 +134,48 @@ class ReportHoursResource(object):
         models.DBSession.commit()
 
         resp.body = json.dumps({'msg': 'Hours deleted successfully.'})
+
+    @staticmethod
+    def on_put(req, resp):
+        raw_json = req.stream.read().decode('utf-8')
+        data = json.loads(raw_json, encoding='utf-8')
+
+        user_id = req.context['user']['id']
+        company_id = data.get('company_id')
+        hours_id = data.get('hours_id')
+        to_update = data.get('fields')
+        employee_id = users.user_in_company(user_id, company_id)
+        employee = None
+
+        # Check if the employee was found in the specified company
+        if not employee_id:
+            resp.status = falcon.HTTP_403
+            resp.body = json.dumps({'error': 'User is not a part of the company'})
+            return
+
+        # Check if employee has the admin role
+        employee = Employee.query.filter_by(id=employee_id).first()
+        if employee.role != static.ADMIN_ROLE and employee.role != static.ACCOUNTANT_ROLE:
+            resp.status = falcon.HTTP_403
+            resp.body = json.dumps({'error': 'You do not have access to update these hours'})
+            return
+
+        # All checks pass, so update the hours object
+        hours = Hours.query.filter_by(id=hours_id).first()
+        if not hours:
+            resp.status = falcon.HTTP_404
+            resp.body = json.dumps({'error': 'Hours with specified ID not found'})
+            return
+
+        # Try to update either time range or approval
+        if to_update.get('start', None) != None and to_update.get('end', None) != None:
+            hours.time_range = intervals.DateTimeInterval([to_update['start'], to_update['end']])
+            time_diff = (end_time - start_time) / timedelta(hours=1)
+            hours.total_hours = time_diff
+        if to_update.get('approved', None) != None:
+            hours.approved = to_update.get('approved', False)
+
+        models.DBSession.add(hours)
+        models.DBSession.commit()
+
+        resp.body = json.dumps({'msg': 'Hours updated successfully.'})
