@@ -36,6 +36,9 @@ class User(Base):
     def verify_password(self, password):
         return pwd_context.verify(password, self.password)
 
+    def get_full_name(self):
+        return self.first_name + ' ' + self.last_name
+
     @property
     def serialize(self):
         return {
@@ -66,7 +69,7 @@ class Company(Base):
             'id': str(self.id),
             'name': self.name,
             'address': self.street_address + ', ' + self.city + ' ' + self.state,
-            'pay_cycle': [p.serialize for p in self.default_pay_cycle]
+            'employees': [User.query.filter_by(id=e.user_id).first().get_full_name() for e in self.employees]
         }
 
 

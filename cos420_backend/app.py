@@ -12,7 +12,7 @@ from cos420_backend.users.users import AuthResource, UserResource
 from cos420_backend.company.company import CompanyResource
 from cos420_backend.employee.employee import EmployeeResource
 from cos420_backend.pay_cycles.pay_cycles import PayCycleResource
-from cos420_backend.hours.hours import HoursResource, ReportHoursResource
+from cos420_backend.hours.hours import HoursResource, ReportHoursResource, PresentResource
 
 import cos420_backend.settings as settings
 from cos420_backend.models import User
@@ -46,6 +46,7 @@ pay_cycle_resource = PayCycleResource()
 report_hours_resource = ReportHoursResource()
 
 hours_resource = HoursResource()
+present_resource = PresentResource()
 
 
 # Create falcon app
@@ -67,6 +68,7 @@ app.add_route('/cycle/{id}', pay_cycle_resource)
 # Hours routes
 app.add_route('/hours/report', report_hours_resource)
 app.add_route('/hours/{id}', hours_resource)
+app.add_route('/hours/present', present_resource)
 
 
 # Useful for debugging problems in API, it works with pdb

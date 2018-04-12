@@ -56,7 +56,6 @@ class HoursResource(object):
             resp.body = json.dumps({'error': 'User is not a part of the company'})
             return
 
-
         hours = Hours.query.filter_by(id=uuid.UUID(id)).first()
         pay_cycle = PayCycle.query.filter_by(id=hours.pay_cycle_id).first()
         if hours:
@@ -214,3 +213,52 @@ class ReportHoursResource(object):
         models.DBSession.commit()
 
         resp.body = json.dumps({'msg': 'Hours updated successfully.'})
+
+
+"""
+Return a list of the employees currently at work
+"""
+class PresentResource(object):
+
+    @staticmethod
+    def on_get(req, resp, id):
+        data = req.params
+        user_id = req.context['user']['id']
+        employee_id = data.get('employee_id', None)
+        company_id = data.get('company_id', None)
+        employee_id = users.user_in_company(user_id, company_id)
+        employee = None
+
+        # Check that a user id is supplied
+        if not user_id:
+            resp.status = falcon.HTTP_403
+            resp.body = json.dumps({'error': 'You must supply a user ID in the query string'})
+            return
+
+        # Check that a company id is supplied
+        if not company_id:
+            resp.status = falcon.HTTP_403
+            resp.body = json.dumps({'error': 'You must supply a company ID in the query string'})
+            return
+
+        # Check if the employee was found in the specified company
+        if not employee_id:
+            resp.status = falcon.HTTP_403
+            resp.body = json.dumps({'error': 'User is not a part of the company'})
+            return
+
+
+        hours = Hours.query.filter_by(id=uuid.UUID(id)).first()
+        pay_cycle = PayCycle.query.filter_by(id=hours.pay_cycle_id).first()
+        if hours:
+            if employee_id != pay_cycle.employee_id:
+                if employee.role != static.ADMIN_ROLE and employee.role != static.ACCOUNTANT_ROLE:
+                    resp.status = falcon.HTTP_403
+                    resp.body = json.dumps({'error': 'You do not have access to see these hours'})
+                    return
+
+        if hours:
+            resp.body = json.dumps(hours.serialize)
+        else:
+            resp.status = falcon.HTTP_404
+            resp.body = json.dumps({'error': 'Hours with given ID do not exist'})

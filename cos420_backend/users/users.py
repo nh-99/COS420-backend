@@ -49,4 +49,4 @@ class UserResource(object):
     @staticmethod
     def on_get(req, resp):
         user = req.context['user']
-        resp.body = "User Found: {}".format(user['username'])
+        resp.body = "User Found: {}".format(user['email'])
