@@ -14,6 +14,7 @@ from sqlalchemy.orm import sessionmaker
 # Local imports
 from cos420_backend import settings
 from cos420_backend.models import Company, User
+import cos420_backend.utils.static as static
 
 
 """
@@ -47,4 +48,7 @@ class CompanyResource(object):
             resp.body = json.dumps({'error': 'You must be a part of the company to get info about it'})
 
         # All checks pass, so return the company
-        resp.body = json.dumps(company.serialize)
+        if employee.role == static.ADMIN_ROLE or employee.role == static.ACCOUNTANT_ROLE:
+            resp.body = json.dumps(company.serialize_owner)
+        else:
+            resp.body = json.dumps(company.serialize)

@@ -12,7 +12,7 @@ from cos420_backend.users.users import AuthResource, UserResource
 from cos420_backend.company.company import CompanyResource
 from cos420_backend.employee.employee import EmployeeResource
 from cos420_backend.pay_cycles.pay_cycles import PayCycleResource
-from cos420_backend.hours.hours import HoursResource, ReportHoursResource, PresentResource
+from cos420_backend.hours.hours import HoursResource, ReportHoursResource, SubmitHoursResource
 
 import cos420_backend.settings as settings
 from cos420_backend.models import User
@@ -29,7 +29,7 @@ def auth_user(payload):
         return None
 
 # Auth handler
-auth_backend = JWTAuthBackend(auth_user, settings.SECRET_KEY, expiration_delta=3 * 60 * 60)
+auth_backend = JWTAuthBackend(auth_user, settings.SECRET_KEY, expiration_delta=2 * 60 * 60)
 auth_middleware = FalconAuthMiddleware(auth_backend)
 
 
@@ -46,7 +46,7 @@ pay_cycle_resource = PayCycleResource()
 report_hours_resource = ReportHoursResource()
 
 hours_resource = HoursResource()
-present_resource = PresentResource()
+submit_hours_resource = SubmitHoursResource()
 
 
 # Create falcon app
@@ -68,7 +68,7 @@ app.add_route('/cycle/{id}', pay_cycle_resource)
 # Hours routes
 app.add_route('/hours/report', report_hours_resource)
 app.add_route('/hours/{id}', hours_resource)
-app.add_route('/hours/present', present_resource)
+app.add_route('/hours/submit', submit_hours_resource)
 
 
 # Useful for debugging problems in API, it works with pdb

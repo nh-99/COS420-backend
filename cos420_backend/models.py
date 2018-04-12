@@ -72,6 +72,24 @@ class Company(Base):
             'employees': [User.query.filter_by(id=e.user_id).first().get_full_name() for e in self.employees]
         }
 
+    @property
+    def serialize_owner(self):
+        import cos420_backend.utils.hours as hours
+        import cos420_backend.utils.cycles as cycles
+
+        return {
+            'id': str(self.id),
+            'name': self.name,
+            'address': self.street_address + ', ' + self.city + ' ' + self.state,
+            'employees': [
+                {
+                    'id': str(e.id),
+                    'name': User.query.filter_by(id=e.user_id).first().get_full_name(),
+                    'hours_approved': hours.get_hours_approved(cycles.get_latest_cycle(e.id, self.id).id)
+                } for e in self.employees
+            ]
+        }
+
 
 class Employee(Base):
     __tablename__ = 'employee'

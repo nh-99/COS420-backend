@@ -216,13 +216,15 @@ class ReportHoursResource(object):
 
 
 """
-Return a list of the employees currently at work
+Submit hours for a company
 """
-class PresentResource(object):
+class SubmitHoursResource(object):
 
     @staticmethod
-    def on_get(req, resp, id):
-        data = req.params
+    def on_post(req, resp):
+        raw_json = req.stream.read().decode('utf-8')
+        data = json.loads(raw_json, encoding='utf-8')
+
         user_id = req.context['user']['id']
         employee_id = data.get('employee_id', None)
         company_id = data.get('company_id', None)
@@ -246,7 +248,6 @@ class PresentResource(object):
             resp.status = falcon.HTTP_403
             resp.body = json.dumps({'error': 'User is not a part of the company'})
             return
-
 
         hours = Hours.query.filter_by(id=uuid.UUID(id)).first()
         pay_cycle = PayCycle.query.filter_by(id=hours.pay_cycle_id).first()
