@@ -17,7 +17,7 @@ from sqlalchemy.orm import sessionmaker
 
 # Local imports
 from cos420_backend import settings
-from cos420_backend.models import Hours, Employee, PayCycle
+from cos420_backend.models import Hours, Employee, PayCycle, Company
 import cos420_backend.models as models
 import cos420_backend.utils.users as users
 import cos420_backend.utils.cycles as cycles
@@ -226,21 +226,14 @@ class SubmitHoursResource(object):
         data = json.loads(raw_json, encoding='utf-8')
 
         user_id = req.context['user']['id']
-        employee_id = data.get('employee_id', None)
         company_id = data.get('company_id', None)
         employee_id = users.user_in_company(user_id, company_id)
         employee = None
 
-        # Check that a user id is supplied
-        if not user_id:
-            resp.status = falcon.HTTP_403
-            resp.body = json.dumps({'error': 'You must supply a user ID in the query string'})
-            return
-
         # Check that a company id is supplied
         if not company_id:
             resp.status = falcon.HTTP_403
-            resp.body = json.dumps({'error': 'You must supply a company ID in the query string'})
+            resp.body = json.dumps({'error': 'You must supply a company ID'})
             return
 
         # Check if the employee was found in the specified company
@@ -249,17 +242,30 @@ class SubmitHoursResource(object):
             resp.body = json.dumps({'error': 'User is not a part of the company'})
             return
 
-        hours = Hours.query.filter_by(id=uuid.UUID(id)).first()
-        pay_cycle = PayCycle.query.filter_by(id=hours.pay_cycle_id).first()
-        if hours:
-            if employee_id != pay_cycle.employee_id:
-                if employee.role != static.ADMIN_ROLE and employee.role != static.ACCOUNTANT_ROLE:
-                    resp.status = falcon.HTTP_403
-                    resp.body = json.dumps({'error': 'You do not have access to see these hours'})
-                    return
+        # Check if employee has the admin role
+        employee = Employee.query.filter_by(id=employee_id).first()
+        if employee.role != static.ADMIN_ROLE and employee.role != static.ACCOUNTANT_ROLE:
+            resp.status = falcon.HTTP_403
+            resp.body = json.dumps({'error': 'You do not have access to see these hours'})
+            return
 
-        if hours:
-            resp.body = json.dumps(hours.serialize)
-        else:
-            resp.status = falcon.HTTP_404
-            resp.body = json.dumps({'error': 'Hours with given ID do not exist'})
+        company = Company.query.filter_by(id=company_id).first()
+
+        # Loop through all employees and give them a fresh, new pay cycle
+        for employee_tp in company.employees:
+            # Get the employee object from the database to assign the current pay cycle to the hours object
+            pay_cycle = cycles.get_latest_cycle(employee_tp.id, company_id)
+
+            # Get the end of the last cycle, and add 1 second to get the start of our new cycle
+            new_start = pay_cycle.time_range.upper + timedelta(seconds=1)
+            new_end = new_start + (pay_cycle.time_range.upper - pay_cycle.time_range.lower) - timedelta(seconds=1)
+
+            pay_cycle = PayCycle(
+                employee_id=employee_tp.id,
+                company_id=company.id,
+                time_range=intervals.DateTimeInterval([new_start, new_end])
+            )
+            models.DBSession.add(pay_cycle)
+
+        models.DBSession.commit()
+        resp.body = json.dumps({'msg': 'Payroll has been submitted successfully'})
