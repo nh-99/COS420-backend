@@ -18,6 +18,32 @@ import cos420_backend.utils.static as static
 
 
 """
+Return list of companies the user is in
+"""
+class MyCompanyResource(object):
+
+    @staticmethod
+    def on_get(req, resp):
+        # Find the user
+        user_id = req.context['user']['id']
+        user = User.query.filter_by(id=user_id).first()
+        companies = []
+
+        for employee in user.employee:
+            companies.append(Company.query.filter_by(id=employee.company_id).first())
+
+        print(companies)
+
+        if len(companies) <= 0:
+            resp.status = falcon.HTTP_404
+            resp.body = json.dumps({'error': 'You are not a part of any companies'})
+            return
+
+        # All checks pass, so return the company
+        resp.body = json.dumps({'companies': [c.simple_serialize for c in companies]})
+
+
+"""
 Return company info
 """
 class CompanyResource(object):

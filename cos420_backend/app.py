@@ -9,9 +9,9 @@ from falcon_auth import FalconAuthMiddleware, JWTAuthBackend
 
 # Local imports
 from cos420_backend.users.users import AuthResource, UserResource
-from cos420_backend.company.company import CompanyResource
+from cos420_backend.company.company import MyCompanyResource, CompanyResource
 from cos420_backend.employee.employee import EmployeeResource
-from cos420_backend.pay_cycles.pay_cycles import PayCycleResource
+from cos420_backend.pay_cycles.pay_cycles import PayCycleResource, CurrentPayCycleResource
 from cos420_backend.hours.hours import HoursResource, ReportHoursResource, SubmitHoursResource
 
 import cos420_backend.settings as settings
@@ -38,13 +38,15 @@ auth_resource = AuthResource(auth_backend)
 
 user_resource = UserResource()
 
+my_company_resource = MyCompanyResource()
 company_resource = CompanyResource()
 
 employee_resource = EmployeeResource()
 
 pay_cycle_resource = PayCycleResource()
-report_hours_resource = ReportHoursResource()
+current_pay_cycle_resource = CurrentPayCycleResource()
 
+report_hours_resource = ReportHoursResource()
 hours_resource = HoursResource()
 submit_hours_resource = SubmitHoursResource()
 
@@ -57,13 +59,15 @@ app.add_route('/users/login', auth_resource)
 app.add_route('/users/me', user_resource)
 
 # Company routes
+app.add_route('/company', my_company_resource)
 app.add_route('/company/{id}', company_resource)
 
 # Employee routes
 app.add_route('/employee/{id}', employee_resource)
 
 # Pay cycle routes
-app.add_route('/cycle/{id}', pay_cycle_resource)
+app.add_route('/cycle/{employee_id}', pay_cycle_resource)
+app.add_route('/cycle/current', current_pay_cycle_resource)
 
 # Hours routes
 app.add_route('/hours/report', report_hours_resource)

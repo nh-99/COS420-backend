@@ -8,7 +8,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 from passlib.apps import custom_app_context as pwd_context
 
-import uuid, datetime, os
+import uuid, datetime, os, calendar
 
 Base = declarative_base()
 DBSession = scoped_session(sessionmaker())
@@ -62,6 +62,14 @@ class Company(Base):
 
     time_created = Column(DateTime, default=datetime.datetime.utcnow)
     last_seen = Column(DateTime, default=datetime.datetime.utcnow)
+
+    @property
+    def simple_serialize(self):
+        return {
+            'id': str(self.id),
+            'name': self.name,
+            'address': self.street_address + ', ' + self.city + ' ' + self.state
+        }
 
     @property
     def serialize(self):
@@ -137,6 +145,7 @@ class PayCycle(Base):
     company_id = Column(UUIDType(binary=False), ForeignKey('company.id'))
     hours = relationship('Hours')
     time_range = Column(DateTimeRangeType)
+    pay_date = Column(DateTime, default=datetime.datetime.utcnow)
     employees = relationship('Employee')
 
     time_created = Column(DateTime, default=datetime.datetime.utcnow)
@@ -144,10 +153,16 @@ class PayCycle(Base):
 
     @property
     def serialize(self):
+        total_hours = 0
+        for hour in self.hours:
+            total_hours += hour.total_hours
         return {
-            'id': self.id,
+            'id': str(self.id),
+            'total_hours': total_hours,
             'hours': [h.serialize for h in self.hours],
-            'time_range': self.time_range
+            'start': calendar.timegm(self.time_range.lower.utctimetuple()),
+            'end': calendar.timegm(self.time_range.upper.utctimetuple()),
+            'pay_date': calendar.timegm(self.pay_date.utctimetuple())
         }
 
 
@@ -169,8 +184,8 @@ class Hours(Base):
         return {
             'id': str(self.id),
             'total': self.total_hours,
-            'start': self.time_range.lower.isoformat(),
-            'end': self.time_range.upper.isoformat()
+            'start': calendar.timegm(self.time_range.lower.utctimetuple()),
+            'end': calendar.timegm(self.time_range.upper.utctimetuple())
         }
 
 from sqlalchemy import create_engine

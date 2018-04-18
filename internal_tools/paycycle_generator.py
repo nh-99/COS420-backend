@@ -13,7 +13,7 @@ start = datetime.utcnow() - timedelta(days=30)
 end = datetime.utcnow() + timedelta(days=30)
 
 cycle = PayCycle(
-    employee_id='3735ee88-bb03-4b9c-b788-45d261f293ce',
+    employee_id='0ca4150b-740d-4441-a511-3b80d2bc1366',
     company_id='b824f8f2-e9c6-4ae4-a4cb-377ff52e4fef',
     time_range=intervals.DateTimeInterval([start, end])
 )

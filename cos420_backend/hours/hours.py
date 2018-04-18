@@ -267,5 +267,6 @@ class SubmitHoursResource(object):
             )
             models.DBSession.add(pay_cycle)
 
+        # TODO: Queue an export or something to hand off data to BSB
         models.DBSession.commit()
         resp.body = json.dumps({'msg': 'Payroll has been submitted successfully'})
