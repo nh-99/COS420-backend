@@ -1,0 +1,399 @@
+[2018-04-24 19:23:12 +0000] [32096] [INFO] Starting gunicorn 19.6.0
+[2018-04-24 19:23:12 +0000] [32096] [INFO] Listening at: http://0.0.0.0:8000 (32096)
+[2018-04-24 19:23:12 +0000] [32096] [INFO] Using worker: sync
+[2018-04-24 19:23:12 +0000] [32099] [INFO] Booting worker with pid: 32099
+[2018-05-01 21:36:34 +0000] [32096] [CRITICAL] WORKER TIMEOUT (pid:32099)
+/home/noah/cos420_backend/venv/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+/home/noah/cos420_backend/venv/lib/python3.5/site-packages/sqlalchemy/sql/compiler.py:643: SAWarning: Can't resolve label reference 'time_created desc'; converting to text() (this warning may be suppressed after 10 occurrences)
+  util.ellipses_string(element.element))
+[2018-05-01 21:36:34 +0000] [32099] [INFO] Worker exiting (pid: 32099)
+[<cos420_backend.models.Company object at 0x7f9983276748>]
+gettin
+gettin
+gettin
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831db160>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831eb518>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831db0b8>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831dbba8>]
+gettin
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831eb358>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831994a8>]
+[2018-05-01 21:36:34 +0000] [15250] [INFO] Booting worker with pid: 15250
+/home/noah/cos420_backend/venv/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+/home/noah/cos420_backend/venv/lib/python3.5/site-packages/sqlalchemy/sql/compiler.py:643: SAWarning: Can't resolve label reference 'time_created desc'; converting to text() (this warning may be suppressed after 10 occurrences)
+  util.ellipses_string(element.element))
+[2018-05-03 13:21:16 +0000] [15250] [ERROR] Error handling request /hours/report
+Traceback (most recent call last):
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/falcon/api.py", line 189, in __call__
+    responder(req, resp, **params)
+  File "/home/noah/cos420_backend/cos420_backend/hours/hours.py", line 206, in on_put
+    hours.time_range = intervals.DateTimeInterval([to_update['start'], to_update['end']])
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/intervals/interval.py", line 184, in __init__
+    self.parser(bounds, lower_inc, upper_inc)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/intervals/interval.py", line 321, in lower
+    value = self.coerce_value(value)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/intervals/interval.py", line 307, in coerce_value
+    return self.coerce_obj(value)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/intervals/interval.py", line 313, in coerce_obj
+    return self.type(obj)
+OverflowError: signed integer is greater than maximum
+[2018-05-03 13:46:54 +0000] [15250] [ERROR] Error handling request /hours/report
+Traceback (most recent call last):
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/falcon/api.py", line 189, in __call__
+    responder(req, resp, **params)
+  File "/home/noah/cos420_backend/cos420_backend/hours/hours.py", line 206, in on_put
+    hours.time_range = intervals.DateTimeInterval([to_update['start'], to_update['end']])
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/intervals/interval.py", line 184, in __init__
+    self.parser(bounds, lower_inc, upper_inc)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/intervals/interval.py", line 321, in lower
+    value = self.coerce_value(value)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/intervals/interval.py", line 307, in coerce_value
+    return self.coerce_obj(value)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/intervals/interval.py", line 313, in coerce_obj
+    return self.type(obj)
+TypeError: Required argument 'month' (pos 2) not found
+[2018-05-03 13:49:57 +0000] [15250] [ERROR] Error handling request /hours/report
+Traceback (most recent call last):
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/falcon/api.py", line 189, in __call__
+    responder(req, resp, **params)
+  File "/home/noah/cos420_backend/cos420_backend/hours/hours.py", line 206, in on_put
+    hours.time_range = intervals.DateTimeInterval([to_update['start'], to_update['end']])
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/intervals/interval.py", line 184, in __init__
+    self.parser(bounds, lower_inc, upper_inc)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/intervals/interval.py", line 321, in lower
+    value = self.coerce_value(value)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/intervals/interval.py", line 307, in coerce_value
+    return self.coerce_obj(value)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/intervals/interval.py", line 313, in coerce_obj
+    return self.type(obj)
+TypeError: Required argument 'month' (pos 2) not found
+[2018-05-03 13:52:05 +0000] [15250] [ERROR] Error handling request /hours/report
+Traceback (most recent call last):
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/falcon/api.py", line 189, in __call__
+    responder(req, resp, **params)
+  File "/home/noah/cos420_backend/cos420_backend/hours/hours.py", line 206, in on_put
+    hours.time_range = intervals.DateTimeInterval([to_update['start'], to_update['end']])
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/intervals/interval.py", line 184, in __init__
+    self.parser(bounds, lower_inc, upper_inc)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/intervals/interval.py", line 321, in lower
+    value = self.coerce_value(value)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/intervals/interval.py", line 307, in coerce_value
+    return self.coerce_obj(value)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/intervals/interval.py", line 313, in coerce_obj
+    return self.type(obj)
+TypeError: Required argument 'month' (pos 2) not found
+[2018-05-03 13:55:23 +0000] [15250] [INFO] Worker reloading: /home/noah/cos420_backend/cos420_backend/hours/hours.py modified
+[2018-05-03 13:55:36 +0000] [15250] [INFO] Worker exiting (pid: 15250)
+[<cos420_backend.models.Company object at 0x7f998327a860>]
+[<cos420_backend.models.Company object at 0x7f99831d1cc0>]
+[<cos420_backend.models.Company object at 0x7f99831dd550>]
+[<cos420_backend.models.Company object at 0x7f998327ad68>]
+[<cos420_backend.models.Company object at 0x7f99831ddb00>]
+[<cos420_backend.models.Company object at 0x7f99831dd278>]
+[<cos420_backend.models.Company object at 0x7f99831ea048>]
+[<cos420_backend.models.Company object at 0x7f9983204f98>]
+[<cos420_backend.models.Company object at 0x7f99831ddcc0>]
+[<cos420_backend.models.Company object at 0x7f99831d19e8>]
+[<cos420_backend.models.Company object at 0x7f99831ef518>]
+[<cos420_backend.models.Company object at 0x7f99831dd5c0>]
+[<cos420_backend.models.Company object at 0x7f99831ddd68>]
+[<cos420_backend.models.Company object at 0x7f99831ef2e8>]
+[<cos420_backend.models.Company object at 0x7f99831ef6d8>]
+[<cos420_backend.models.Company object at 0x7f99831ddac8>]
+[<cos420_backend.models.Company object at 0x7f99831ddcc0>]
+[<cos420_backend.models.Company object at 0x7f99831d19e8>]
+[<cos420_backend.models.Company object at 0x7f99831ef2b0>]
+[<cos420_backend.models.Company object at 0x7f99831efcf8>]
+[<cos420_backend.models.Company object at 0x7f99831dd4e0>]
+[<cos420_backend.models.Company object at 0x7f99831dde48>]
+[<cos420_backend.models.Company object at 0x7f99831ef668>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f9983270cf8>]
+[<cos420_backend.models.Company object at 0x7f99831ef160>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831dd048>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831dd2b0>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831d1b38>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831f1550>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831d1ba8>]
+gettin
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831d1c88>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831f6080>]
+gettin
+gettin
+gettin
+gettin
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f998317f080>]
+gettin
+gettin
+gettin
+gettin
+gettin
+gettin
+gettin
+gettin
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831f1208>]
+gettin
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831dd470>]
+gettin
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831f10b8>]
+gettin
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831ddc18>]
+gettin
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f998317f940>]
+gettin
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831f1be0>]
+gettin
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f998327a320>]
+gettin
+gettin
+gettin
+[2018-05-03 13:55:36 +0000] [10908] [INFO] Booting worker with pid: 10908
+/home/noah/cos420_backend/venv/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+[2018-05-03 13:55:39 +0000] [10908] [INFO] Worker reloading: /home/noah/cos420_backend/cos420_backend/hours/hours.py modified
+[2018-05-03 13:55:51 +0000] [10908] [INFO] Worker exiting (pid: 10908)
+[2018-05-03 13:55:51 +0000] [10913] [INFO] Booting worker with pid: 10913
+/home/noah/cos420_backend/venv/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+/home/noah/cos420_backend/venv/lib/python3.5/site-packages/sqlalchemy/sql/compiler.py:643: SAWarning: Can't resolve label reference 'time_created desc'; converting to text() (this warning may be suppressed after 10 occurrences)
+  util.ellipses_string(element.element))
+[2018-05-03 20:32:42 +0000] [10913] [ERROR] Error handling request /company/b824f8f2-e9c6-4ae4-a4cb-377ff52e4fef
+Traceback (most recent call last):
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/falcon/api.py", line 189, in __call__
+    responder(req, resp, **params)
+  File "/home/noah/cos420_backend/cos420_backend/company/company.py", line 78, in on_get
+    resp.body = json.dumps(company.serialize_owner)
+  File "/home/noah/cos420_backend/cos420_backend/models.py", line 97, in serialize_owner
+    } for e in self.employees
+  File "/home/noah/cos420_backend/cos420_backend/models.py", line 97, in <listcomp>
+    } for e in self.employees
+AttributeError: 'NoneType' object has no attribute 'get_full_name'
+[2018-05-03 20:32:56 +0000] [10913] [ERROR] Error handling request /company/b824f8f2-e9c6-4ae4-a4cb-377ff52e4fef
+Traceback (most recent call last):
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/falcon/api.py", line 189, in __call__
+    responder(req, resp, **params)
+  File "/home/noah/cos420_backend/cos420_backend/company/company.py", line 78, in on_get
+    resp.body = json.dumps(company.serialize_owner)
+  File "/home/noah/cos420_backend/cos420_backend/models.py", line 97, in serialize_owner
+    } for e in self.employees
+  File "/home/noah/cos420_backend/cos420_backend/models.py", line 97, in <listcomp>
+    } for e in self.employees
+AttributeError: 'NoneType' object has no attribute 'get_full_name'
+[2018-05-03 20:34:07 +0000] [10913] [ERROR] Error handling request /company/b824f8f2-e9c6-4ae4-a4cb-377ff52e4fef
+Traceback (most recent call last):
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/gunicorn/workers/sync.py", line 135, in handle
+    self.handle_request(listener, req, client, addr)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/gunicorn/workers/sync.py", line 176, in handle_request
+    respiter = self.wsgi(environ, resp.start_response)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/falcon/api.py", line 189, in __call__
+    responder(req, resp, **params)
+  File "/home/noah/cos420_backend/cos420_backend/company/company.py", line 78, in on_get
+    resp.body = json.dumps(company.serialize_owner)
+  File "/home/noah/cos420_backend/cos420_backend/models.py", line 97, in serialize_owner
+    } for e in self.employees
+  File "/home/noah/cos420_backend/cos420_backend/models.py", line 97, in <listcomp>
+    } for e in self.employees
+AttributeError: 'NoneType' object has no attribute 'get_full_name'
+[2018-05-03 20:35:28 +0000] [10913] [INFO] Worker reloading: /home/noah/cos420_backend/cos420_backend/models.py modified
+[2018-05-03 20:35:37 +0000] [10913] [INFO] Worker exiting (pid: 10913)
+gettin
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831e8a58>]
+[<cos420_backend.models.Company object at 0x7f99831eb6a0>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831f7048>]
+gettin
+gettin
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831f74e0>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831ebcc0>]
+gettin
+[<cos420_backend.models.Company object at 0x7f998320ad68>]
+[<cos420_backend.models.Company object at 0x7f99831eb630>]
+[<cos420_backend.models.Company object at 0x7f99831ebd30>]
+[<cos420_backend.models.Company object at 0x7f998318e470>]
+[<cos420_backend.models.Company object at 0x7f998318e390>]
+[<cos420_backend.models.Company object at 0x7f99831f7518>]
+gettin
+gettin
+gettin
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831eb358>]
+[<cos420_backend.models.Company object at 0x7f998318e240>]
+[<cos420_backend.models.Company object at 0x7f998318eac8>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f998326b710>]
+gettin
+[<cos420_backend.models.Company object at 0x7f998320ac18>]
+[<cos420_backend.models.Company object at 0x7f998320a668>]
+[<cos420_backend.models.Company object at 0x7f99831eb4e0>]
+[<cos420_backend.models.Company object at 0x7f998326bb70>]
+[<cos420_backend.models.Company object at 0x7f99831e8e80>]
+[<cos420_backend.models.Company object at 0x7f9983190588>]
+[<cos420_backend.models.Company object at 0x7f998318e400>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831ebcf8>]
+[<cos420_backend.models.Company object at 0x7f99831905c0>]
+[<cos420_backend.models.Company object at 0x7f998318e198>]
+[<cos420_backend.models.Company object at 0x7f9983251dd8>]
+[<cos420_backend.models.Company object at 0x7f998326b6d8>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831eb940>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831ebb38>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f998320ad68>]
+[<cos420_backend.models.Company object at 0x7f9983190e10>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831e8860>]
+[<cos420_backend.models.Company object at 0x7f998318eeb8>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f998318e048>]
+[<cos420_backend.models.Company object at 0x7f99831906a0>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831eb7f0>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831904e0>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f998318eac8>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831e8a58>]
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831e8e10>]
+[<cos420_backend.models.Company object at 0x7f998318e3c8>]
+[<cos420_backend.models.Company object at 0x7f998320aef0>]
+[<cos420_backend.models.Company object at 0x7f99831907b8>]
+[<cos420_backend.models.Company object at 0x7f998318eda0>]
+[<cos420_backend.models.Company object at 0x7f99831eba20>]
+[<cos420_backend.models.Company object at 0x7f99831905f8>]
+[<cos420_backend.models.Company object at 0x7f998319d1d0>]
+[<cos420_backend.models.Company object at 0x7f99831ebe80>]
+[<cos420_backend.models.Company object at 0x7f99831eb4e0>]
+gettin
+gettin
+gettin
+[<cos420_backend.models.Company object at 0x7f99831909e8>]
+[<cos420_backend.models.Company object at 0x7f998318e4e0>]
+[<cos420_backend.models.Company object at 0x7f998318e2e8>]
+[2018-05-03 20:35:37 +0000] [16259] [INFO] Booting worker with pid: 16259
+/home/noah/cos420_backend/venv/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+[2018-05-03 20:35:37 +0000] [16259] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/gunicorn/arbiter.py", line 557, in spawn_worker
+    worker.init_process()
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/gunicorn/workers/base.py", line 126, in init_process
+    self.load_wsgi()
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/gunicorn/workers/base.py", line 136, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/gunicorn/app/wsgiapp.py", line 65, in load
+    return self.load_wsgiapp()
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/gunicorn/app/wsgiapp.py", line 52, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/home/noah/cos420_backend/venv/lib/python3.5/site-packages/gunicorn/util.py", line 357, in import_app
+    __import__(module)
+  File "/home/noah/cos420_backend/cos420_backend/app.py", line 11, in <module>
+    from cos420_backend.users.users import AuthResource, UserResource
+  File "/home/noah/cos420_backend/cos420_backend/users/users.py", line 16, in <module>
+    from cos420_backend.models import User
+  File "/home/noah/cos420_backend/cos420_backend/models.py", line 52, in <module>
+    class Company(Base):
+  File "/home/noah/cos420_backend/cos420_backend/models.py", line 63, in Company
+    secondary=association_table,
+NameError: name 'association_table' is not defined
+[2018-05-03 20:35:37 +0000] [16259] [INFO] Worker exiting (pid: 16259)
+[2018-05-03 20:35:38 +0000] [32096] [INFO] Shutting down: Master
+[2018-05-03 20:35:38 +0000] [32096] [INFO] Reason: Worker failed to boot.
+[2018-05-03 20:50:09 +0000] [16660] [INFO] Starting gunicorn 19.6.0
+[2018-05-03 20:50:09 +0000] [16660] [INFO] Listening at: http://0.0.0.0:8000 (16660)
+[2018-05-03 20:50:09 +0000] [16660] [INFO] Using worker: sync
+[2018-05-03 20:50:09 +0000] [16663] [INFO] Booting worker with pid: 16663

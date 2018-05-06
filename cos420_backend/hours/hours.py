@@ -203,8 +203,10 @@ class ReportHoursResource(object):
 
         # Try to update either time range or approval
         if to_update.get('start', None) != None and to_update.get('end', None) != None:
-            hours.time_range = intervals.DateTimeInterval([to_update['start'], to_update['end']])
-            time_diff = (end_time - start_time) / timedelta(hours=1)
+            start = datetime.datetime.fromtimestamp(int(to_update.get('start')))
+            end = datetime.datetime.fromtimestamp(int(to_update.get('end')))
+            hours.time_range = intervals.DateTimeInterval([start, end])
+            time_diff = (end - start) / timedelta(hours=1)
             hours.total_hours = time_diff
         if to_update.get('approved', None) != None:
             hours.approved = to_update.get('approved', False)
